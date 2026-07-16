@@ -2,6 +2,7 @@
 
 [![CI](https://github.com/leotemtem/MoneyFlow/actions/workflows/ci.yml/badge.svg)](https://github.com/leotemtem/MoneyFlow/actions/workflows/ci.yml)
 [![CodeQL](https://github.com/leotemtem/MoneyFlow/actions/workflows/codeql.yml/badge.svg)](https://github.com/leotemtem/MoneyFlow/actions/workflows/codeql.yml)
+[![codecov](https://codecov.io/gh/leotemtem/MoneyFlow/branch/main/graph/badge.svg)](https://codecov.io/gh/leotemtem/MoneyFlow)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 [![Python](https://img.shields.io/badge/python-3.10%20%7C%203.11%20%7C%203.12-blue.svg)](pyproject.toml)
 [![Ruff](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/astral-sh/ruff/main/assets/badge/v2.json)](https://github.com/astral-sh/ruff)
