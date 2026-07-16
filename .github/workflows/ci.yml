@@ -142,5 +142,7 @@ jobs:
       - run: python -m pip install --upgrade pip pip-audit
       - run: pip install -e .
       - name: pip-audit (third-party dependencies only)
-        # --skip-editable ignores this project's own local package (not on PyPI).
-        run: pip-audit --strict --skip-editable --progress-spinner off
+        # Skip this project's own editable install (not on PyPI); still fails on
+        # any real dependency vulnerability. --strict is omitted because it would
+        # treat the skipped editable package itself as an audit error.
+        run: pip-audit --skip-editable --progress-spinner off
