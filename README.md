@@ -8,10 +8,11 @@ OpenAI-compatible endpoint.
 
 Built with Streamlit, pandas, and SQLAlchemy.
 
+**📽️ Demo:** [Watch the demo video](https://drive.google.com/file/d/1tx3pEMpf8RdRSLAOspVtkAQVKpekROek/view?usp=drive_link)
+
 > MoneyFlow began as a collaborative university software project. This repository
-> is a separately maintained, privacy-sanitised open-source edition, prepared and
-> maintained by the current open-source maintainer. It is not affiliated with any
-> university.
+> is a separately maintained, privacy-sanitised open-source edition, maintained
+> here independently. It is not affiliated with any university.
 
 ---
 
@@ -269,9 +270,16 @@ Released under the [MIT Licence](LICENSE). © 2026 Leo Teme Teme.
 
 Third-party runtime attributions: [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md).
 
+## Acknowledgements
+
+MoneyFlow began as a collaborative university software project. Thanks to the
+original group members who contributed to that earlier work:
+
+- Muhammad Iqbal
+- Prabhashini Rajapakse Kankanamalage
+
 ## Project origin
 
 > MoneyFlow began as a collaborative university software project. This repository
-> is a separately maintained, privacy-sanitised open-source edition. Identifying
-> information about the original team has been removed; the project is maintained
-> here independently.
+> is a separately maintained, privacy-sanitised open-source edition, maintained
+> here independently by the current maintainer.

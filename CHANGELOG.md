@@ -43,7 +43,9 @@ sanitised from a collaborative university project.
 ### Removed
 - All university-specific material (assessment PDFs, meeting minutes, project
   outline, GitLab CI, setup/process docs).
-- All identifying information about the original project team.
+- Private/identifying details of the original project team (emails, usernames,
+  student IDs, private links). A names-only acknowledgement of group members is
+  retained at the maintainer's request.
 - Real/local credentials, the local database, stored user records, caches,
   virtual environments, and the oversized binary logo assets.
 - Unused dependencies (`scikit-learn`, `langchain`) that were not referenced by
