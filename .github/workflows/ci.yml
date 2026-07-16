@@ -5,26 +5,40 @@ on:
     branches: [main]
   pull_request:
     branches: [main]
+  workflow_dispatch:
+
+# Least-privilege by default; jobs opt into more only if needed.
+permissions:
+  contents: read
+
+# Cancel superseded runs on the same ref to save CI minutes.
+concurrency:
+  group: ci-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
 
 jobs:
   lint:
+    name: Lint & format
     runs-on: ubuntu-latest
+    timeout-minutes: 10
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
         with:
           python-version: "3.12"
-      - name: Install
-        run: |
-          python -m pip install --upgrade pip
-          pip install -e ".[dev]"
+          cache: pip
+          cache-dependency-path: pyproject.toml
+      - run: python -m pip install --upgrade pip
+      - run: pip install -e ".[dev]"
       - name: Ruff lint
-        run: ruff check .
+        run: ruff check --output-format=github .
       - name: Ruff format check
         run: ruff format --check .
 
   test:
+    name: Tests (py${{ matrix.python-version }})
     runs-on: ubuntu-latest
+    timeout-minutes: 15
     strategy:
       fail-fast: false
       matrix:
@@ -34,35 +48,98 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: ${{ matrix.python-version }}
-      - name: Install
-        run: |
-          python -m pip install --upgrade pip
-          pip install -e ".[dev]"
+          cache: pip
+          cache-dependency-path: pyproject.toml
+      - run: python -m pip install --upgrade pip
+      - run: pip install -e ".[dev]"
       - name: Unit tests
         run: pytest -m "not integration" --cov=moneyflow --cov-report=term-missing
-      - name: Integration tests
-        run: pytest -m "integration" --cov=moneyflow --cov-append --cov-report=term-missing
+      - name: Integration tests (with coverage gate)
+        run: >-
+          pytest -m "integration"
+          --cov=moneyflow --cov-append
+          --cov-report=term-missing --cov-report=xml
+          --cov-fail-under=75
+      - name: Upload coverage report
+        if: matrix.python-version == '3.12'
+        uses: actions/upload-artifact@v4
+        with:
+          name: coverage-xml
+          path: coverage.xml
+          if-no-files-found: error
 
   smoke:
+    name: App import & boot smoke test
     runs-on: ubuntu-latest
+    timeout-minutes: 10
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
         with:
           python-version: "3.12"
-      - name: Install
+          cache: pip
+          cache-dependency-path: pyproject.toml
+      - run: python -m pip install --upgrade pip
+      - run: pip install -e .
+      - name: Import smoke test (AI disabled by default)
         run: |
-          python -m pip install --upgrade pip
-          pip install -e .
-      - name: Application import smoke test
+          python -c "import moneyflow; from moneyflow.ui.app import main; from moneyflow.ai import get_ai_provider; assert get_ai_provider() is None; print('import OK', moneyflow.__version__)"
+      - name: Streamlit boot smoke test
         run: |
-          python -c "import moneyflow; from moneyflow.ui.app import main; from moneyflow.ai import get_ai_provider; assert get_ai_provider() is None; print('smoke OK', moneyflow.__version__)"
+          streamlit run streamlit_app.py --server.headless true --server.port 8501 &
+          APP_PID=$!
+          ok=0
+          for i in $(seq 1 30); do
+            if curl -sf http://localhost:8501/_stcore/health >/dev/null; then
+              echo "Streamlit healthy after ${i} attempt(s)"; ok=1; break
+            fi
+            sleep 2
+          done
+          kill "$APP_PID" 2>/dev/null || true
+          test "$ok" = "1" || { echo "Streamlit failed to become healthy"; exit 1; }
 
-  secret-scan:
+  build:
+    name: Build & metadata check
     runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: python -m pip install --upgrade pip build twine
+      - name: Build sdist & wheel
+        run: python -m build
+      - name: Validate package metadata
+        run: twine check dist/*
+
+  security:
+    name: Secret & data scan
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
     steps:
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0
-      - name: Secret / data scan
+      - name: gitleaks
+        uses: gitleaks/gitleaks-action@v2
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Repository secret / financial-data guard
         run: bash scripts/scan_secrets.sh
+
+  audit:
+    name: Dependency vulnerability audit
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    # Advisory: surfaces known CVEs without blocking merges (Dependabot tracks fixes).
+    continue-on-error: true
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: python -m pip install --upgrade pip pip-audit
+      - run: pip install -e .
+      - name: pip-audit
+        run: pip-audit --strict --progress-spinner off

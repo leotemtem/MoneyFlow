@@ -77,10 +77,23 @@ filterwarnings = [
 [tool.coverage.run]
 source = ["moneyflow"]
 branch = true
+omit = [
+    # Streamlit UI needs a browser/e2e harness; excluded from unit-coverage.
+    "src/moneyflow/ui/*",
+    "src/moneyflow/services/*",
+    "src/moneyflow/state/*",
+    # Heavy local model provider requires torch + a downloaded model.
+    "src/moneyflow/ai/local_mistral.py",
+]
 
 [tool.coverage.report]
 show_missing = true
 skip_covered = true
+exclude_also = [
+    "if TYPE_CHECKING:",
+    "raise NotImplementedError",
+    "@(abc\\.)?abstractmethod",
+]
 
 [tool.ruff]
 line-length = 100
