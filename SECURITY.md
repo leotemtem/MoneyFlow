@@ -47,9 +47,9 @@ and disclosure timeline with you.
 
 ## Known security caveats
 
-- Passwords are hashed with **unsalted SHA-256** — acceptable for a local,
-  educational app but **not** suitable for real multi-user deployments. Migrate to
-  bcrypt/Argon2 before any production use.
+- Passwords are hashed with **Argon2id** (salted, via `argon2-cffi`). This is
+  still an educational project, so review the authentication flow before relying
+  on it for real multi-user deployments.
 
 ## Dependencies
 

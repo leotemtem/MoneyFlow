@@ -57,6 +57,9 @@ sanitised from a collaborative university project.
   the code.
 
 ### Security
-- Documented the unsalted SHA-256 password-hashing limitation and recommended
-  bcrypt/Argon2 for real deployments.
+- Replaced SHA-256 password hashing with **Argon2id** (`argon2-cffi`), with
+  salted hashes and transparent rehashing on login. Resolves the CodeQL
+  "weak cryptographic hashing on sensitive data" findings.
+- Fixed additional CodeQL findings: a possibly-uninitialized variable in the
+  optional local-model provider and an empty `except` in the sidebar.
 - Added CSV upload validation notes and kept CSV-injection sanitisation.

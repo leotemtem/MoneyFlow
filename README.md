@@ -248,9 +248,8 @@ out, the rest of the app keeps working.
 
 ## Known limitations
 
-- **Password hashing is unsalted SHA-256** — adequate for a local/educational app,
-  but not recommended for real deployments. Prefer bcrypt/Argon2 before any real
-  multi-user use.
+- Passwords are hashed with **Argon2id** (salted, via `argon2-cffi`). Still, this
+  is an educational project — review the auth flow before any real multi-user use.
 - No transaction de-duplication (re-uploading a CSV can duplicate rows).
 - Categorisation and subscription detection are keyword/heuristic based.
 - AI insight quality depends entirely on the model you configure.
@@ -258,7 +257,6 @@ out, the rest of the app keeps working.
 
 ## Roadmap
 
-- Salted, modern password hashing (bcrypt/Argon2)
 - Transaction de-duplication on save
 - Analysis-history UI
 - Additional import formats (Excel, OFX, PDF)
