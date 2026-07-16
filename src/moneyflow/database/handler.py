@@ -9,7 +9,6 @@ SQLite file), so the application runs with zero configuration.
 
 from __future__ import annotations
 
-import hashlib
 import logging
 from datetime import datetime
 
@@ -18,6 +17,7 @@ from sqlalchemy import create_engine, func, inspect, select, text
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm import Session, sessionmaker
 
+from moneyflow.auth.passwords import hash_password, needs_rehash, verify_password
 from moneyflow.config.settings import get_settings
 from moneyflow.database.models import (
     AnalysisHistory,
@@ -80,9 +80,6 @@ class DatabaseHandler:
     def _session(self) -> Session:
         return self._Session()
 
-    def _hash_password(self, password: str) -> str:
-        return hashlib.sha256(password.encode()).hexdigest()
-
     # ============= USER MANAGEMENT =============
 
     def register_user(
@@ -93,7 +90,7 @@ class DatabaseHandler:
                 session.add(
                     User(
                         username=username,
-                        password_hash=self._hash_password(password),
+                        password_hash=hash_password(password),
                         email=email or None,
                         employment_status=employment_status or None,
                     )
@@ -110,14 +107,12 @@ class DatabaseHandler:
     def authenticate_user(self, username: str, password: str) -> tuple[bool, str]:
         with self._session() as session:
             try:
-                user = session.scalar(
-                    select(User).where(
-                        User.username == username,
-                        User.password_hash == self._hash_password(password),
-                    )
-                )
-                if user:
+                user = session.scalar(select(User).where(User.username == username))
+                if user and verify_password(user.password_hash, password):
                     user.last_login = datetime.utcnow()
+                    # Transparently upgrade the hash if cost parameters changed.
+                    if needs_rehash(user.password_hash):
+                        user.password_hash = hash_password(password)
                     session.commit()
                     return True, "Login successful!"
                 return False, "Invalid username or password"

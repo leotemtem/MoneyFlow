@@ -51,13 +51,16 @@ class TestUserManagement:
 
     def test_change_password(self, tmp_db):
         tmp_db.register_user("grace", "old_pass1")
-        import hashlib
+        from moneyflow.auth.passwords import hash_password
 
-        new_hash = hashlib.sha256(b"new_pass2").hexdigest()
+        new_hash = hash_password("new_pass2")
         ok, _ = tmp_db.change_password("grace", new_hash)
         assert ok
         ok, _ = tmp_db.authenticate_user("grace", "new_pass2")
         assert ok
+        # old password no longer works
+        ok, _ = tmp_db.authenticate_user("grace", "old_pass1")
+        assert not ok
 
 
 # ---------------------------------------------------------------------------

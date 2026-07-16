@@ -3,8 +3,7 @@ User Authentication Handler
 Manages user registration, login, and session management
 """
 
-import hashlib
-
+from moneyflow.auth.passwords import hash_password
 from moneyflow.auth.validators import InputValidator
 from moneyflow.database.handler import DatabaseHandler
 
@@ -15,10 +14,6 @@ class AuthHandler:
     def __init__(self):
         """Initialize auth handler with database"""
         self.db = DatabaseHandler()
-
-    def _hash_password(self, password: str) -> str:
-        """Hash password using SHA-256"""
-        return hashlib.sha256(password.encode()).hexdigest()
 
     def register_user(
         self, username: str, password: str, email: str = "", employment_status: str = ""
@@ -105,8 +100,7 @@ class AuthHandler:
             return False, "New password must be different from current password"
 
         # Update password in database
-        new_password_hash = self._hash_password(new_password)
-        return self.db.change_password(username, new_password_hash)
+        return self.db.change_password(username, hash_password(new_password))
 
     def user_exists(self, username: str) -> bool:
         """Check if user exists"""

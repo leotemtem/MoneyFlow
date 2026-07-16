@@ -1,6 +1,7 @@
 # SPDX-License-Identifier: MIT
 """Application sidebar: account menu, AI toggle, upload, and saved data."""
 
+import logging
 from datetime import datetime
 
 import streamlit as st
@@ -10,6 +11,8 @@ from moneyflow.analytics.unusual_rules import get_default_unusual_rules
 from moneyflow.services.file_processor import build_financial_data, process_uploaded_file
 from moneyflow.services.llm_service import enable_ai
 from moneyflow.ui.components.logo_animation import render_logo_animation
+
+logger = logging.getLogger(__name__)
 
 
 def render_sidebar():
@@ -110,7 +113,7 @@ def show_user_menu():
             last_login = datetime.fromisoformat(user_info["last_login"])
             st.sidebar.caption(f"Last login: {last_login.strftime('%Y-%m-%d %H:%M')}")
         except (ValueError, TypeError):
-            pass
+            logger.debug("Could not parse last_login timestamp for display")
 
     if st.sidebar.button("Logout", width="stretch"):
         st.session_state.authenticated = False

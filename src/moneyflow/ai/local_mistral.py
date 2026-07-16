@@ -19,6 +19,16 @@ from moneyflow.config.settings import get_settings
 logger = logging.getLogger(__name__)
 
 
+def _bitsandbytes_available() -> bool:
+    """True if 4-bit quantization support (bitsandbytes) can be imported."""
+    try:
+        import bitsandbytes  # noqa: F401
+        from transformers import BitsAndBytesConfig  # noqa: F401
+    except ImportError:
+        return False
+    return True
+
+
 class LocalMistralProvider(AIProvider):
     """Run a local instruct model with transformers.
 
@@ -55,16 +65,9 @@ class LocalMistralProvider(AIProvider):
                 "Local model support is not installed. Install the 'local-ai' extra."
             ) from exc
 
-        try:
-            from transformers import BitsAndBytesConfig
-
-            bnb_available = True
-        except ImportError:
-            bnb_available = False
-
         if torch.cuda.is_available():
             self.device = "cuda"
-            use_quantization = bnb_available
+            use_quantization = _bitsandbytes_available()
         elif getattr(torch.backends, "mps", None) is not None and torch.backends.mps.is_available():
             self.device = "cpu"  # 7B float16 buffers are unreliable on MPS; use CPU.
             use_quantization = False
@@ -80,6 +83,8 @@ class LocalMistralProvider(AIProvider):
         self._tokenizer.pad_token = self._tokenizer.eos_token
 
         if use_quantization:
+            from transformers import BitsAndBytesConfig
+
             bnb_config = BitsAndBytesConfig(
                 load_in_4bit=True,
                 bnb_4bit_quant_type="nf4",
