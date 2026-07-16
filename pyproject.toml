@@ -1,5 +1,5 @@
 [build-system]
-requires = ["setuptools>=68", "wheel"]
+requires = ["setuptools>=83.0.0", "wheel"]
 build-backend = "setuptools.build_meta"
 
 [project]
@@ -24,35 +24,35 @@ classifiers = [
 
 # Core runtime dependencies (SQLite works out of the box; no AI/network required).
 dependencies = [
-    "streamlit>=1.29,<2.0",
-    "pandas>=2.1,<3.0",
-    "numpy>=1.26,<3.0",
-    "plotly>=5.18,<6.0",
-    "SQLAlchemy>=2.0,<3.0",
-    "python-dotenv>=1.0,<2.0",
-    "requests>=2.31,<3.0",
+    "streamlit>=1.59.2,<2.0",
+    "pandas>=2.3.3,<3.0",
+    "numpy>=2.2.6,<3.0",
+    "plotly>=6.9.0,<7.0",
+    "SQLAlchemy>=2.0.51,<3.0",
+    "python-dotenv>=1.2.2,<2.0",
+    "requests>=2.34.2,<3.0",
 ]
 
 [project.optional-dependencies]
 # PostgreSQL driver (only needed when DATABASE_URL points at Postgres).
-postgres = ["psycopg2-binary>=2.9,<3.0"]
+postgres = ["psycopg2-binary>=2.9.12,<3.0"]
 
 # Local instruction-tuned model support (large download; optional).
 local-ai = [
-    "torch>=2.2",
-    "transformers>=4.36",
-    "accelerate>=0.25",
-    "tokenizers>=0.15",
-    "sentencepiece>=0.1.99",
-    "protobuf>=3.20",
-    "bitsandbytes>=0.46.1; sys_platform != 'darwin'",
+    "torch>=2.13.0",
+    "transformers>=5.14.1",
+    "accelerate>=1.14.0",
+    "tokenizers>=0.23.1",
+    "sentencepiece>=0.2.2",
+    "protobuf>=7.35.1",
+    "bitsandbytes>=0.49.2; sys_platform != 'darwin'",
 ]
 
 # Development, linting, and testing.
 dev = [
-    "pytest>=7.4",
-    "pytest-cov>=4.1",
-    "ruff>=0.5",
+    "pytest>=9.1.1",
+    "pytest-cov>=7.1.0",
+    "ruff>=0.15.22",
 ]
 
 [project.urls]
