@@ -24,8 +24,13 @@ sanitised from a collaborative university project.
   `THIRD_PARTY_NOTICES.md`, and this changelog.
 - `pyproject.toml` packaging with `postgres`, `local-ai`, and `dev` extras.
 - Ruff configuration, pre-commit hooks, and a best-effort secret/data scan.
-- GitHub Actions CI: lint, unit + integration tests across Python 3.10–3.12,
-  an application import smoke test, and a secret scan.
+- GitHub Actions CI hardened for a public repository: least-privilege
+  `permissions`, concurrency cancellation, pip caching, per-job timeouts,
+  lint, tests across Python 3.10–3.12 with a coverage gate and uploaded
+  coverage report, an application import **and** Streamlit boot smoke test,
+  a package build + `twine` metadata check, `gitleaks` plus the custom
+  secret/data scan, and an advisory `pip-audit` dependency audit.
+- CodeQL security analysis workflow and Dependabot updates (pip + Actions).
 - Synthetic sample data (single-amount and Debit/Credit formats) and a
   synthetic-data generator script.
 - Tests for the configuration layer and the AI provider abstraction, including

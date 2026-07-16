@@ -1,5 +1,11 @@
 # MoneyFlow
 
+[![CI](https://github.com/leotemtem/MoneyFlow/actions/workflows/ci.yml/badge.svg)](https://github.com/leotemtem/MoneyFlow/actions/workflows/ci.yml)
+[![CodeQL](https://github.com/leotemtem/MoneyFlow/actions/workflows/codeql.yml/badge.svg)](https://github.com/leotemtem/MoneyFlow/actions/workflows/codeql.yml)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
+[![Python](https://img.shields.io/badge/python-3.10%20%7C%203.11%20%7C%203.12-blue.svg)](pyproject.toml)
+[![Ruff](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/astral-sh/ruff/main/assets/badge/v2.json)](https://github.com/astral-sh/ruff)
+
 **A local-first personal finance analysis app.** Upload a bank-statement CSV and
 MoneyFlow parses it, categorises transactions, detects subscriptions and unusual
 spending, and presents dashboards — all computed locally. Natural-language "AI
