@@ -1,0 +1,59 @@
+# Python bytecode and caches
+__pycache__/
+*.py[cod]
+*$py.class
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+.coverage
+.coverage.*
+coverage*.xml
+htmlcov/
+
+# Distribution / packaging
+build/
+dist/
+*.egg-info/
+.eggs/
+
+# Virtual environments
+.venv/
+venv/
+venv_*/
+ENV/
+env/
+
+# Local environment / secrets
+.env
+.env.*
+!.env.example
+
+# Local application data (never commit financial data)
+data/
+*.db
+*.sqlite
+*.sqlite3
+*.sql
+*.dump
+
+# User uploads and generated exports
+uploads/
+exports/
+*.log
+
+# Local model / large binary assets (add your own, do not commit)
+*.glb
+*.gguf
+*.bin
+*.safetensors
+models/
+
+# Streamlit runtime and editor state
+.streamlit/secrets.toml
+.vscode/
+.idea/
+
+# OS / cross-platform metadata
+.DS_Store
+Thumbs.db
+*:Zone.Identifier

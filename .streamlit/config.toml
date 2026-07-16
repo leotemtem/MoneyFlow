@@ -1,0 +1,43 @@
+[server]
+maxUploadSize = 200
+enableStaticServing = true
+fileWatcherType = "none"
+enableCORS = false
+enableXsrfProtection = false
+
+[browser]
+gatherUsageStats = false
+
+[theme.light]
+primaryColor = "#176B5F"
+backgroundColor = "#F7F8FA"
+secondaryBackgroundColor = "#FFFFFF"
+textColor = "#182230"
+borderColor = "#D9DEE7"
+dataframeBorderColor = "#D9DEE7"
+dataframeHeaderBackgroundColor = "#EEF2F6"
+buttonRadius = "0.45rem"
+baseRadius = "0.5rem"
+
+[theme.dark]
+primaryColor = "#5DD6BC"
+backgroundColor = "#0B1118"
+secondaryBackgroundColor = "#111827"
+textColor = "#F4F6FB"
+borderColor = "#344054"
+dataframeBorderColor = "#344054"
+dataframeHeaderBackgroundColor = "#182230"
+buttonRadius = "0.45rem"
+baseRadius = "0.5rem"
+
+[theme.light.sidebar]
+backgroundColor = "#FFFFFF"
+secondaryBackgroundColor = "#F7F8FA"
+textColor = "#182230"
+borderColor = "#D9DEE7"
+
+[theme.dark.sidebar]
+backgroundColor = "#101828"
+secondaryBackgroundColor = "#1D2939"
+textColor = "#F2F4F7"
+borderColor = "#1D2939"
