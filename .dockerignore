@@ -1,0 +1,58 @@
+# VCS
+.git
+.gitignore
+
+# Virtual environments
+.venv
+venv
+env
+ENV
+
+# Python caches / bytecode
+__pycache__
+**/__pycache__
+*.py[cod]
+.pytest_cache
+.ruff_cache
+.mypy_cache
+
+# Coverage / build artifacts
+.coverage
+.coverage.*
+coverage*.xml
+htmlcov
+build
+dist
+*.egg-info
+
+# Local application data (never bake financial data into the image)
+data
+*.db
+*.sqlite
+*.sqlite3
+*.sql
+*.dump
+uploads
+exports
+*.log
+
+# Local model / large binary assets
+*.glb
+*.gguf
+*.bin
+*.safetensors
+models
+
+# Editor / OS metadata
+.vscode
+.idea
+.DS_Store
+Thumbs.db
+*:Zone.Identifier
+
+# Local agentic-workflow planning docs (untracked; not needed in the image)
+CLAUDE.md
+AGENTS.md
+PROJECT.md
+TECHSTACK.md
+TASK.md

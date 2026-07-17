@@ -57,3 +57,12 @@ models/
 .DS_Store
 Thumbs.db
 *:Zone.Identifier
+
+# Agentic workflow docs (local planning/coordination only — not part of the
+# open-source deliverable). These drive the Claude Code + implementation-agent
+# workflow and must stay untracked.
+/CLAUDE.md
+/AGENTS.md
+/PROJECT.md
+/TECHSTACK.md
+/TASK.md

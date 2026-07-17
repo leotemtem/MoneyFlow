@@ -1,0 +1,68 @@
+# Full MoneyFlow stack for harness/Docker validation.
+# Always invoke with an explicit project name, e.g. `docker compose -p moneyflow ...`.
+#
+# Services:
+#   db        - PostgreSQL (NOT exposed to the host)
+#   mock-llm  - stdlib OpenAI-compatible mock endpoint (no paid/live LLM)
+#   app       - Streamlit application (openai provider -> mock-llm)
+name: moneyflow
+
+services:
+  db:
+    image: postgres:16-alpine
+    environment:
+      # Placeholder, throwaway credentials for local/test use only. The database
+      # is never exposed to the host (see: no 'ports:' below). Do not reuse.
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: moneyflow
+    volumes:
+      - moneyflow_pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U user -d moneyflow"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+    # No 'ports:' mapping — PostgreSQL is reachable only inside the project network.
+    networks:
+      - moneyflow_net
+
+  mock-llm:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    command: ["python", "scripts/mock_llm_server.py"]
+    healthcheck:
+      test: ["CMD", "curl", "-fsS", "http://localhost:8000/health"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+    # No host ports — internal to the project network only.
+    networks:
+      - moneyflow_net
+
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    depends_on:
+      db:
+        condition: service_healthy
+      mock-llm:
+        condition: service_healthy
+    environment:
+      DATABASE_URL: postgresql://user:password@db:5432/moneyflow
+      MONEYFLOW_AI_PROVIDER: openai
+      MONEYFLOW_AI_BASE_URL: http://mock-llm:8000/v1
+      MONEYFLOW_AI_MODEL: mock-model
+      MONEYFLOW_AI_API_KEY: ""
+    ports:
+      - "8501:8501"
+    networks:
+      - moneyflow_net
+
+volumes:
+  moneyflow_pgdata:
+
+networks:
+  moneyflow_net:
