@@ -24,7 +24,7 @@ classifiers = [
 
 # Core runtime dependencies (SQLite works out of the box; no AI/network required).
 dependencies = [
-    "streamlit>=1.59.2,<2.0",
+    "streamlit>=1.60.0,<2.0",
     "pandas>=2.3.3,<3.0",
     "numpy>=2.2.6,<3.0",
     "plotly>=6.9.0,<7.0",
@@ -53,7 +53,7 @@ local-ai = [
 dev = [
     "pytest>=9.1.1",
     "pytest-cov>=7.1.0",
-    "ruff>=0.15.22",
+    "ruff>=0.16.0",
 ]
 
 [project.urls]
